@@ -7,7 +7,7 @@ variable "instance_count" {
 variable "platform_id" {
   description = "The type of virtual machine to create"
   type        = string
-  default     = "standard-v2"
+  default     = "standard-v3"
 }
 
 variable "folder_id" {
@@ -20,25 +20,6 @@ variable "image_family" {
   type        = string
 }
 
-variable "zones" {
-  description = "Yandex Cloud Zones for provisoned resources"
-  type        = list(string)
-  default     = ["ru-central1-a", "ru-central1-b", "ru-central1-c"]
-}
-
-variable "name" {
-  description = "Yandex Cloud Compute instance name"
-  type        = string
-}
-
-# The hostname must be unique within the network and region
-# If not specified, the host name will be equal to id of the instance and fqdn will be <id>.auto.internal
-# Otherwise FQDN will be <hostname>.<region_id>.internal
-variable "hostname" {
-  description = "Host name for the instance. This field is used to generate the instance fqdn value"
-  type        = string
-}
-
 # Preemtible VM: https://cloud.yandex.ru/docs/compute/concepts/preemptible-vm
 variable "preemptible" {
   description = "Specifies if the instance is preemptible"
@@ -46,10 +27,10 @@ variable "preemptible" {
   default     = false
 }
 
-variable "is_nat" {
-  description = "Provide a public address for instance to access the internet over NAT"
-  type        = bool
-  default     = false
+variable "type" {
+  description = "Type of the boot disk"
+  type        = string
+  default     = "network-ssd"
 }
 
 variable "size" {
@@ -76,16 +57,6 @@ variable "core_fraction" {
   default     = 100
 }
 
-variable "subnet" {
-  description = "Yandex VPC subnet"
-  type        = string
-}
-
-variable "sg_id" {
-  description = "Security group ids for network interface"
-  type        = list(string)
-}
-
 # IP address should be already reserved in web UI
 variable "nat_ip_address" {
   description = "Public IP address for instance to access the internet over NAT"
@@ -102,7 +73,7 @@ variable "ip_address" {
 variable "ssh_username" {
   description = "User for SSH access to the instance"
   type        = string
-  default     = "ubuntu"
+  default     = "debian"
 }
 
 variable "ssh_pubkey" {
@@ -111,8 +82,32 @@ variable "ssh_pubkey" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
-variable "secondary_disk_id" {
-  description = "ID of the disk that is attached to the instance"
-  type        = string
-  default     = ""
+variable "secondary_disk" {
+  description = "Additional secondary disk to attach to the instance"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "serial-port-enable" {
+  description = "Serial-port-enable parameter for metadata"
+  type        = number
+  default     = null
+}
+
+variable "labels" {
+  description = "A set of key/value label pairs to assign to the instance."
+  type        = map(string)
+  default     = {}
+}
+
+variable "instance" {
+  description = "A map containing a map object for each value"
+  type = map(object({
+    name      = string # Yandex Cloud Compute instance name
+    zone      = string # Yandex Cloud Zone for provision resources
+    subnet_id = string # Yandex VPC subnet_id
+    is_nat    = bool   # Provide a public address for instance to access the internet over NAT
+  }))
+
+  default = {}
 }
