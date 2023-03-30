@@ -28,7 +28,7 @@ module "vps" {
       name = "test-instance",
       zone = "ru-central1-a",
       subnet_id = "xxx",
-      is_nat = false
+      is_nat = true
     }
   }
 
