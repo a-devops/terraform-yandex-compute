@@ -1,6 +1,6 @@
 # Simple Compute instance
 
-Configuration in this directory creates [preemptible compute instance](https://cloud.yandex.ru/docs/compute/concepts/preemptible-vm) with dynamic public IP (via NAT).
+Configuration in this directory creates compute instance with static public IP.
 
 ## Usage
 

@@ -1,24 +1,36 @@
-data "yandex_compute_image" "this" {
+data "yandex_compute_image" "vps" {
   family    = var.image_family
+}
+
+resource "yandex_vpc_address" "addr" {
+  # for_each  = var.instance
+
+  for_each = { for k, v in var.instance : k => v if v.is_nat }
+
   folder_id = var.folder_id
+  name      = "${tostring(each.value.name)}-addr"
+
+  external_ipv4_address {
+    zone_id = tostring(each.value.zone)
+  }
 }
 
-data "yandex_compute_disk" "secondary_disk" {
-  disk_id = var.secondary_disk_id
+resource "yandex_compute_disk" "disks" {
+  for_each = var.secondary_disk
+  name     = each.key
+  size     = each.value["size"]
 }
 
-data "yandex_vpc_subnet" "this" {
-  name = var.subnet
-}
+resource "yandex_compute_instance" "vps" {
+  for_each    = var.instance
+  folder_id   = var.folder_id
 
-resource "yandex_compute_instance" "this" {
-  count = var.instance_count
-
-  name        = var.name
+  name        = tostring(each.value.name)
+  hostname    = tostring(each.value.name)
   platform_id = var.platform_id
-  zone        = var.zones[0]
+  zone        = tostring(each.value.zone)
 
-  hostname = var.hostname
+  labels      = var.labels
 
   resources {
     cores         = var.cores
@@ -28,25 +40,25 @@ resource "yandex_compute_instance" "this" {
 
   boot_disk {
     initialize_params {
-      image_id = data.yandex_compute_image.this.id
-      type     = "network-ssd"
+      image_id = data.yandex_compute_image.vps.id
+      type     = var.type
       size     = var.size
     }
   }
 
   dynamic "secondary_disk" {
-    #for_each = var.secondary_disk_id
+    for_each = var.secondary_disk
     content {
-      disk_id = data.yandex_compute_disk.secondary_disk.id
+      auto_delete = lookup(secondary_disk.value, "auto_delete", true)
+      disk_id     = yandex_compute_disk.disks[secondary_disk.key].id
     }
   }
 
   network_interface {
-    subnet_id          = data.yandex_vpc_subnet.this.id
-    nat                = var.is_nat
-    nat_ip_address     = var.nat_ip_address
-    security_group_ids = var.sg_id
-    ip_address         = var.ip_address
+    subnet_id      = tostring(each.value.subnet_id)
+    nat            = each.value.is_nat ? true : false
+    nat_ip_address = each.value.is_nat == true ? yandex_vpc_address.addr[each.key].external_ipv4_address[0].address : null
+    ip_address     = var.ip_address
   }
 
   scheduling_policy {
@@ -55,11 +67,8 @@ resource "yandex_compute_instance" "this" {
 
   metadata = {
     ssh-keys = "${var.ssh_username}:${file("${var.ssh_pubkey}")}"
+    serial-port-enable = var.serial-port-enable != null ? var.serial-port-enable : null
   }
 
   allow_stopping_for_update = true
-
-  depends_on = [
-    data.yandex_vpc_subnet.this
-  ]
 }

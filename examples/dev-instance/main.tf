@@ -18,24 +18,23 @@ terraform {
   }
 }
 
-module "compute" {
-  source  = "glavk/compute/yandex"
-  version = "0.1.2"
+module "vps" {
+  source = "git@github.com:avbuben/terraform-yandex-compute"
 
-  image_family = "ubuntu-docker"
-  subnet       = "sn-dev-0"
-  folder_id    = "xxx"
+  image_family = "debian-10"
 
-  name     = "development"
-  hostname = "dev"
-  is_nat   = true
+  instance = {
+    test = {
+      name = "test-instance",
+      zone = "ru-central1-a",
+      subnet_id = "xxx",
+      is_nat = true
+    }
+  }
 
   cores  = 2
+  core_fraction = 50
   memory = 4
+  type   = "network-ssd"
   size   = "10"
-
-  preemptible = true
-
-  sg_id = ["xxx"]
-
 }
