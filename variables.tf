@@ -116,5 +116,5 @@ variable "instance" {
 variable "cloud-init-file" {
   description = "Path to cloud-init file. For example: create your user with ssh key"
   type        = string
-  default     = ""
+  default     = "cloud-init.yml"
 }
