@@ -73,13 +73,13 @@ variable "ip_address" {
 variable "ssh_username" {
   description = "User for SSH access to the instance"
   type        = string
-  default     = "debian"
+  default     = ""
 }
 
 variable "ssh_pubkey" {
   description = "SSH public key for access to the instance"
   type        = string
-  default     = "~/.ssh/id_rsa.pub"
+  default     = ""
 }
 
 variable "secondary_disk" {
