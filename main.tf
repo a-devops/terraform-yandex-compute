@@ -66,6 +66,7 @@ resource "yandex_compute_instance" "vps" {
   }
 
   metadata = {
+    ssh-keys = "${var.ssh_username}:${file("${var.ssh_pubkey}")}"
     serial-port-enable = var.serial-port-enable != null ? var.serial-port-enable : null
     user-data = file("${path.module}/${var.cloud-init-file}")
   }

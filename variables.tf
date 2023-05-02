@@ -73,7 +73,7 @@ variable "ip_address" {
 variable "ssh_username" {
   description = "User for SSH access to the instance"
   type        = string
-  default     = ""
+  default     = "yc-user"
 }
 
 variable "ssh_pubkey" {
