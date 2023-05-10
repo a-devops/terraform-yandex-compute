@@ -20,6 +20,11 @@ variable "image_family" {
   type        = string
 }
 
+variable "source_image" {
+  description = "Yandex Cloud Compute Image ID"
+  type        = string
+}
+
 # Preemtible VM: https://cloud.yandex.ru/docs/compute/concepts/preemptible-vm
 variable "preemptible" {
   description = "Specifies if the instance is preemptible"

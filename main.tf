@@ -1,5 +1,6 @@
 data "yandex_compute_image" "vps" {
   family    = var.image_family
+  source_image = var.source_image
 }
 
 resource "yandex_vpc_address" "addr" {

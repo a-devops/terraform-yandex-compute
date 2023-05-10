@@ -22,6 +22,7 @@ module "vps" {
   source = "git@github.com:avbuben/terraform-yandex-compute"
 
   image_family = "debian-10"
+  source_image = "fd8jdrao13n3eq8t3fq6"
 
   instance = {
     test = {
