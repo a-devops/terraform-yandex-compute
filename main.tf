@@ -47,7 +47,7 @@ resource "yandex_compute_instance" "vps" {
   }
 
  lifecycle {
-    ignore_changes        = [boot_disk.initialize_params.image_id]
+    ignore_changes        = [boot_disk[0]]
     create_before_destroy = true
   }
 
