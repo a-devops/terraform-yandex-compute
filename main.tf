@@ -1,6 +1,5 @@
 data "yandex_compute_image" "vps" {
   family    = var.image_family
-  source    = var.source_image
 }
 
 resource "yandex_vpc_address" "addr" {
@@ -32,6 +31,11 @@ resource "yandex_compute_instance" "vps" {
   zone        = tostring(each.value.zone)
 
   labels      = var.labels
+
+  lifecycle {
+    ignore_changes        = [image_id]
+    create_before_destroy = true
+  }
 
   resources {
     cores         = var.cores
