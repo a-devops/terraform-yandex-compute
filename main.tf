@@ -47,7 +47,7 @@ resource "yandex_compute_instance" "vps" {
   }
 
   lifecycle {
-    ignore_changes        = [id]
+    ignore_changes        = [idiss]
     create_before_destroy = true
   }
 
