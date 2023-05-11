@@ -32,11 +32,6 @@ resource "yandex_compute_instance" "vps" {
 
   labels      = var.labels
 
-  lifecycle {
-    ignore_changes        = [image_id]
-    create_before_destroy = true
-  }
-
   resources {
     cores         = var.cores
     memory        = var.memory
@@ -49,6 +44,11 @@ resource "yandex_compute_instance" "vps" {
       type     = var.type
       size     = var.size
     }
+  }
+
+  lifecycle {
+    ignore_changes        = [image_id]
+    create_before_destroy = true
   }
 
   dynamic "secondary_disk" {
