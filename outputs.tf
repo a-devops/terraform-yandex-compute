@@ -15,3 +15,7 @@ output "internal_ips" {
     for k, bd in yandex_compute_instance.vps : k => bd.network_interface.0.ip_address
   }
 }
+
+output "image_id" {
+  value = data.yandex_compute_image.vps.id
+}
