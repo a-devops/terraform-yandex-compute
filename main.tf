@@ -1,9 +1,12 @@
+locals {
+  cloud-init-file = var.cloud-init-file != "" ? var.cloud-init-file : "${path.module}/cloud-init.yml"
+}
+
 data "yandex_compute_image" "vps" {
   family    = var.image_family
 }
 
 resource "yandex_vpc_address" "addr" {
-  # for_each  = var.instance
 
   for_each = { for k, v in var.instance : k => v if v.is_nat }
 
@@ -68,7 +71,7 @@ resource "yandex_compute_instance" "vps" {
   metadata = {
     ssh-keys = "${var.ssh_username}:${file("${var.ssh_pubkey}")}"
     serial-port-enable = var.serial-port-enable != null ? var.serial-port-enable : null
-    user-data = file("yc-cloud-init.yml")
+    user-data = file("${local.cloud-init-file}")
   }
 
   allow_stopping_for_update = true

@@ -1,0 +1,9 @@
+# example: create user with sudo and add ssh key
+#cloud-config
+#users:
+#  - name: user
+#    groups: sudo
+#    shell: /bin/bash
+#    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+#    ssh_authorized_keys:
+#      - ssh-ed25519 AAAAC3Nza1lDPF91WFUEEHJS user@domain.local
