@@ -19,3 +19,7 @@ output "internal_ips" {
 output "cloud-init-file" {
   value = var.cloud-init-file
 }
+  
+output "image_id" {
+  value = data.yandex_compute_image.vps.id
+}

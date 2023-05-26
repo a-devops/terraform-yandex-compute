@@ -49,6 +49,11 @@ resource "yandex_compute_instance" "vps" {
     }
   }
 
+ lifecycle {
+    ignore_changes        = [boot_disk[0].initialize_params[0].image_id]
+    create_before_destroy = true
+  }
+
   dynamic "secondary_disk" {
     for_each = var.secondary_disk
     content {
