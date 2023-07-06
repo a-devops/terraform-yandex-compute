@@ -28,7 +28,10 @@ module "vps" {
       name = "test-instance",
       zone = "ru-central1-a",
       subnet_id = "xxx",
-      is_nat = true
+      is_nat = true,
+      secondary_disk = true,
+      secondary_disk_name = "test-volume",
+      secondary_disk_size = "1"
     }
   }
 

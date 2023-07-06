@@ -23,7 +23,7 @@ Terraform module which creates [compute instance](https://cloud.yandex.ru/servic
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| instance | Instance parameters: name, zone, subnet_id, is_nat (static public ip) | <pre>map(object({<br>  name = string<br>  zone = string<br>  subnet_id = string<br>  is_nat = bool<br>}))</pre> | `{}` | yes |
+| instance | Instance parameters| <pre>map(object({<br>  name = string<br>  zone = string<br>  subnet_id = string<br>  is_nat = bool<br> secondary_disk = bool<br> secondary_disk_name = string<br> secondary_disk_size = string<br> }))</pre> | `{}` | yes |
 | core\_fraction | Baseline performance for a core as a percent | `number` | `100` | no |
 | cores | CPU cores for the instance | `number` | `2` | no |
 | folder\_id | Yandex Cloud Folder ID where resources will be created | `string` | n/a | yes |

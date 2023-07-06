@@ -7,7 +7,6 @@ data "yandex_compute_image" "vps" {
 }
 
 resource "yandex_vpc_address" "addr" {
-
   for_each = { for k, v in var.instance : k => v if v.is_nat }
 
   folder_id = var.folder_id
@@ -19,9 +18,11 @@ resource "yandex_vpc_address" "addr" {
 }
 
 resource "yandex_compute_disk" "disks" {
-  for_each = var.secondary_disk
-  name     = each.key
-  size     = each.value["size"]
+  for_each = { for k, v in var.instance : k => v if v.secondary_disk }
+  folder_id = var.folder_id
+  name     = each.value.secondary_disk_name
+  zone     = tostring(each.value.zone)
+  size     = each.value.secondary_disk_size
 }
 
 resource "yandex_compute_instance" "vps" {
@@ -55,10 +56,9 @@ resource "yandex_compute_instance" "vps" {
   }
 
   dynamic "secondary_disk" {
-    for_each = var.secondary_disk
+    for_each = contains(keys(each.value), "secondary_disk_name") ? [1] : []
     content {
-      auto_delete = lookup(secondary_disk.value, "auto_delete", true)
-      disk_id     = yandex_compute_disk.disks[secondary_disk.key].id
+      disk_id     = yandex_compute_disk.disks[each.key].id
     }
   }
 
