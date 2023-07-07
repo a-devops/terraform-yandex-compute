@@ -35,6 +35,7 @@ Terraform module which creates [compute instance](https://cloud.yandex.ru/servic
 | size | Size of the boot disk in GB | `string` | `"10"` | no |
 | ssh\_pubkey | SSH public key for access to the instance | `string` | `"~/.ssh/id_rsa.pub"` | no |
 | ssh\_username | User for SSH access to the instance | `string` | `"debian"` | no |
+| cloud-init-file | cloud-init file content | `string` | null | no |
 
 ## Outputs
 
@@ -43,3 +44,4 @@ Terraform module which creates [compute instance](https://cloud.yandex.ru/servic
 | compute\_instance\_external\_ips | The external IP address of the instance |
 | compute\_instance\_fqdns | The fully qualified DNS name of this instance |
 | compute\_instance\_internal\_ips | The internal IP address of the instance |
+| cloud-init-file | cloud-init file content |
