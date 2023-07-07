@@ -1,9 +1,17 @@
 locals {
-  cloud-init-file = var.cloud-init-file != "" ? var.cloud-init-file : "${path.module}/cloud-init.yml"
+  cloud-init-file = var.cloud-init-file != "" ? var.cloud-init-file : null
 }
 
 data "yandex_compute_image" "vps" {
   family    = var.image_family
+}
+
+data "template_file" "script" {
+  template = "${local.cloud-init-file}"
+  vars = {
+    ssh_pubkey   = "${file("${var.ssh_pubkey}")}"
+    ssh_username = "${var.ssh_username}"
+  }
 }
 
 resource "yandex_vpc_address" "addr" {
@@ -76,7 +84,7 @@ resource "yandex_compute_instance" "vps" {
   metadata = {
     ssh-keys = "${var.ssh_username}:${file("${var.ssh_pubkey}")}"
     serial-port-enable = var.serial-port-enable != null ? var.serial-port-enable : null
-    user-data = file("${local.cloud-init-file}")
+    user-data = data.template_file.script.rendered
   }
 
   allow_stopping_for_update = true

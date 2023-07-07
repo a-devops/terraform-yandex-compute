@@ -1,7 +1,0 @@
-#users:
-#  - name: user
-#    groups: sudo
-#    shell: /bin/bash
-#    sudo: ['ALL=(ALL) NOPASSWD:ALL']
-#    ssh_authorized_keys:
-#      - ssh-ed25519 AAAAC3NzaC1lZD1be8DPF9o1WFUEEHJS zak@dom.local

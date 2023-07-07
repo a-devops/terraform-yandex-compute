@@ -111,7 +111,7 @@ variable "instance" {
 
 # https://cloud.yandex.com/en/docs/compute/concepts/vm-metadata
 variable "cloud-init-file" {
-  description = "Path to cloud-init file. For example: create your user with ssh key"
+  description = "cloud-init file content"
   type        = string
   default     = ""
 }
