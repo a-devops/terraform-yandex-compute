@@ -23,12 +23,26 @@ module "vps" {
 
   image_family = "debian-10"
 
+  cloud-init-file = <<-EOT
+    #cloud-config: this is examlpe to add user and key
+    users:
+      - name: ${ssh_username}
+        groups: sudo
+        shell: /bin/bash
+        sudo: ['ALL=(ALL) NOPASSWD:ALL']
+        ssh_authorized_keys:
+          - ${ssh_pubkey}
+  EOT
+
   instance = {
     test = {
       name = "test-instance",
       zone = "ru-central1-a",
       subnet_id = "xxx",
-      is_nat = true
+      is_nat = true,
+      secondary_disk = true,
+      secondary_disk_name = "test-volume",
+      secondary_disk_size = "1"
     }
   }
 

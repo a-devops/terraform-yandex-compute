@@ -82,12 +82,6 @@ variable "ssh_pubkey" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
-variable "secondary_disk" {
-  description = "Additional secondary disk to attach to the instance"
-  type        = map(map(string))
-  default     = {}
-}
-
 variable "serial-port-enable" {
   description = "Serial-port-enable parameter for metadata"
   type        = number
@@ -102,19 +96,22 @@ variable "labels" {
 
 variable "instance" {
   description = "A map containing a map object for each value"
-  type = map(object({
-    name      = string # Yandex Cloud Compute instance name
-    zone      = string # Yandex Cloud Zone for provision resources
-    subnet_id = string # Yandex VPC subnet_id
-    is_nat    = bool   # Provide a public address for instance to access the internet over NAT
-  }))
-
-  default = {}
+  type = map(any)
+# Example maps
+#    vm01 = {
+#     name      = string # Yandex Cloud Compute instance name
+#     zone      = string # Yandex Cloud Zone for provision resources
+#     subnet_id = string # Yandex VPC subnet_id
+#     is_nat    = bool   # Provide a public address for instance to access the internet over NAT
+#     secondary_disk      = bool # Secondary disk true/false
+#     secondary_disk_name = string # Secondary disk name
+#     secondary_disk_size = string # Secondary disk size GB
+#     }
 }
 
 # https://cloud.yandex.com/en/docs/compute/concepts/vm-metadata
 variable "cloud-init-file" {
-  description = "Path to cloud-init file. For example: create your user with ssh key"
+  description = "cloud-init file content"
   type        = string
   default     = ""
 }
