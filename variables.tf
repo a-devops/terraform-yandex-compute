@@ -105,6 +105,7 @@ variable "instance" {
 #     is_nat    = bool   # Provide a public address for instance to access the internet over NAT
 #     secondary_disk      = bool # Secondary disk true/false
 #     secondary_disk_name = string # Secondary disk name
+#     secondary_disk_type = string # Secondary disk type
 #     secondary_disk_size = string # Secondary disk size GB
 #     }
 }

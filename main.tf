@@ -29,6 +29,7 @@ resource "yandex_compute_disk" "disks" {
   for_each = { for k, v in var.instance : k => v if v.secondary_disk }
   folder_id = var.folder_id
   name     = each.value.secondary_disk_name
+  type     = each.value.secondary_disk_type
   zone     = tostring(each.value.zone)
   size     = each.value.secondary_disk_size
 }
