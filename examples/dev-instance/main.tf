@@ -42,6 +42,7 @@ module "vps" {
       is_nat = true,
       secondary_disk = true,
       secondary_disk_name = "test-volume",
+      secondary_disk_type = "network-ssd",
       secondary_disk_size = "1"
     }
   }
