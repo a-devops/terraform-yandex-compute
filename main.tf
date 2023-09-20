@@ -1,17 +1,12 @@
 locals {
-  cloud-init-file = var.cloud-init-file != "" ? var.cloud-init-file : null
+  rendered-cloud-init-file = var.cloud-init-file != "" ? templatefile(var.cloud-init-file, {
+      ssh_pubkey   = file(var.ssh_pubkey)
+      ssh_username = var.ssh_username
+    }) : null
 }
 
 data "yandex_compute_image" "vps" {
   family    = var.image_family
-}
-
-data "template_file" "script" {
-  template = "${local.cloud-init-file}"
-  vars = {
-    ssh_pubkey   = "${file("${var.ssh_pubkey}")}"
-    ssh_username = "${var.ssh_username}"
-  }
 }
 
 resource "yandex_vpc_address" "addr" {
@@ -26,12 +21,12 @@ resource "yandex_vpc_address" "addr" {
 }
 
 resource "yandex_compute_disk" "disks" {
-  for_each = { for k, v in var.instance : k => v if v.secondary_disk }
+  for_each  = { for k, v in var.instance : k => v if try(v.secondary_disk, false) }
   folder_id = var.folder_id
-  name     = each.value.secondary_disk_name
-  type     = each.value.secondary_disk_type
-  zone     = tostring(each.value.zone)
-  size     = each.value.secondary_disk_size
+  name      = each.value.secondary_disk_name
+  type      = each.value.secondary_disk_type
+  zone      = tostring(each.value.zone)
+  size      = each.value.secondary_disk_size
 }
 
 resource "yandex_compute_instance" "vps" {
@@ -83,9 +78,9 @@ resource "yandex_compute_instance" "vps" {
   }
 
   metadata = {
-    ssh-keys = "${var.ssh_username}:${file("${var.ssh_pubkey}")}"
-    serial-port-enable = var.serial-port-enable != null ? var.serial-port-enable : null
-    user-data = data.template_file.script.rendered
+    ssh-keys            = "${var.ssh_username}:${file(var.ssh_pubkey)}"
+    serial-port-enable  = var.serial-port-enable != null ? var.serial-port-enable : null
+    user-data           = local.rendered-cloud-init-file
   }
 
   allow_stopping_for_update = true
