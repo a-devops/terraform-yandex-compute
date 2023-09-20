@@ -1,8 +1,5 @@
 locals {
-  rendered-cloud-init-file = var.cloud-init-file != "" ? templatefile(var.cloud-init-file, {
-      ssh_pubkey   = file(var.ssh_pubkey)
-      ssh_username = var.ssh_username
-    }) : null
+  rendered-cloud-init-file = var.cloud-init-file != "" ? "${var.cloud-init-file}" : null
 }
 
 data "yandex_compute_image" "vps" {
