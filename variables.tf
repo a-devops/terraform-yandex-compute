@@ -79,7 +79,7 @@ variable "ssh_username" {
 variable "ssh_pubkey" {
   description = "SSH public key for access to the instance"
   type        = string
-  default     = "~/.ssh/id_rsa.pub"
+  default     = ""
 }
 
 variable "serial-port-enable" {
