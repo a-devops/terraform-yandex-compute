@@ -21,5 +21,5 @@ output "image_id" {
 }
 
 output "cloud-init-file" {
-  value = data.template_file.script.rendered
+  value = local.rendered-cloud-init-file
 }
